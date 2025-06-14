@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flowers of the World - A Hand-Drawn Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(to bottom, #f8f8f8, #e8f5e9);
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23e8f5e9" opacity="0.3"/></svg>') repeat;
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            background: linear-gradient(45deg, #ff69b4, #9370db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #558b2f;
+            font-style: italic;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Gallery Section */
+        .gallery {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .flower-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flower-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(46,125,50,0.05) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .flower-card:hover::before {
+            transform: scale(1);
+        }
+
+        .flower-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .flower-image {
+            width: 100%;
+            height: 250px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .flower-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .flower-name {
+            font-size: 1.8rem;
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .flower-origin {
+            font-size: 1.1rem;
+            color: #1976d2;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .flower-description {
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Decorative Elements */
+        .petal {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #ffb3ba 0%, #ff6b81 100%);
+            border-radius: 0 100% 0 100%;
+            opacity: 0.7;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+
+        /* About Section */
+        .about {
+            background: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .about h2 {
+            font-size: 2.5rem;
+            color: #2e7d32;
+            margin-bottom: 1.5rem;
+        }
+
+        .about p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #555;
+        }
+
+        /* Interactive Hearts */
+        .heart {
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            color: #ff6b81;
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #2e7d32;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-20px); }
+            60% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .scroll-indicator svg {
+            width: 30px;
+            height: 30px;
+            fill: #2e7d32;
+            opacity: 0.6;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .modal-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .close {
+            position: absolute;
+            right: 1.5rem;
+            top: 1.5rem;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .close:hover {
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .taxonomy-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .taxonomy-section h3 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .taxonomy-item {
+            display: flex;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .taxonomy-item:last-child {
+            border-bottom: none;
+        }
+
+        .taxonomy-label {
+            font-weight: 600;
+            color: #555;
+            width: 120px;
+        }
+
+        .taxonomy-value {
+            color: #333;
+            font-style: italic;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: contain;
+            margin-bottom: 1rem;
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Flowers of the World</h1>
+        <p class="subtitle">A Hand-Drawn Collection <span class="heart">♥</span></p>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 13.5L7.5 11l1.42-1.41L12 12.67l3.08-3.08L16.5 11l-4.5 4.5z"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+        <div class="gallery-grid">
+            <!-- Bell Flower -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/LIf1bb0.jpg" alt="Bell Flower drawing">
+                </div>
+                <h3 class="flower-name">Bell Flower</h3>
+                <p class="flower-origin">Northern Hemisphere</p>
+                <p class="flower-description">Delicate drooping blooms</p>
+            </div>
+
+            <!-- Borage -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/I2dmDyf.jpg" alt="Borage drawing">
+                </div>
+                <h3 class="flower-name">Borage</h3>
+                <p class="flower-origin">Mediterranean Region</p>
+                <p class="flower-description">Star-shaped beauty</p>
+            </div>
+
+            <!-- Camellia -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/YdcBb2t.jpg" alt="Camellia drawing">
+                </div>
+                <h3 class="flower-name">Camellia</h3>
+                <p class="flower-origin">East Asia</p>
+                <p class="flower-description">Layered perfection</p>
+            </div>
+
+            <!-- Corazón Sangriento -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/ppqQrGo.jpg" alt="Corazón Sangriento drawing">
+                </div>
+                <h3 class="flower-name">Corazón Sangriento</h3>
+                <p class="flower-origin">Asia & North America</p>
+                <p class="flower-description">Bleeding heart charm</p>
+            </div>
+
+            <!-- Ginebra -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/iDqibzY.jpg" alt="Ginebra drawing">
+                </div>
+                <h3 class="flower-name">Ginebra</h3>
+                <p class="flower-origin">Canary Islands</p>
+                <p class="flower-description">Vibrant circular blooms</p>
+            </div>
+
+            <!-- Gladiolus -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/tCxI593.jpg" alt="Gladiolus drawing">
+                </div>
+                <h3 class="flower-name">Gladiolus</h3>
+                <p class="flower-origin">South Africa</p>
+                <p class="flower-description">Sword lily majesty</p>
+            </div>
+
+            <!-- Hortensia -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/d63AZw7.jpg" alt="Hortensia drawing">
+                </div>
+                <h3 class="flower-name">Hortensia</h3>
+                <p class="flower-origin">Asia & Americas</p>
+                <p class="flower-description">Hydrangea clusters</p>
+            </div>
+
+            <!-- Jasmine -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/WTUsgcc.jpg" alt="Jasmine drawing">
+                </div>
+                <h3 class="flower-name">Jasmine</h3>
+                <p class="flower-origin">Tropical Asia</p>
+                <p class="flower-description">Fragrant white stars</p>
+            </div>
+
+            <!-- Laranjeira -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/PmLYbQN.jpg" alt="Laranjeira drawing">
+                </div>
+                <h3 class="flower-name">Laranjeira</h3>
+                <p class="flower-origin">Southeast Asia</p>
+                <p class="flower-description">Orange blossom delight</p>
+            </div>
+
+            <!-- Lavender -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/zzHFqE8.jpg" alt="Lavender drawing">
+                </div>
+                <h3 class="flower-name">Lavender</h3>
+                <p class="flower-origin">Mediterranean Region</p>
+                <p class="flower-description">Aromatic purple spikes</p>
+            </div>
+
+            <!-- Lotus -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/WMrYnjO.jpg" alt="Lotus drawing">
+                </div>
+                <h3 class="flower-name">Lotus</h3>
+                <p class="flower-origin">Asia & Australia</p>
+                <p class="flower-description">Sacred aquatic bloom</p>
+            </div>
+
+            <!-- Magnolia -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/X89hyVF.jpg" alt="Magnolia drawing">
+                </div>
+                <h3 class="flower-name">Magnolia</h3>
+                <p class="flower-origin">East Asia & Americas</p>
+                <p class="flower-description">Ancient elegant flowers</p>
+            </div>
+
+            <!-- Margarita -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/C1wv0yC.jpg" alt="Margarita drawing">
+                </div>
+                <h3 class="flower-name">Margarita</h3>
+                <p class="flower-origin">Europe</p>
+                <p class="flower-description">Classic daisy charm</p>
+            </div>
+
+            <!-- Orquideas -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/ooKk8r6.jpg" alt="Orquideas drawing">
+                </div>
+                <h3 class="flower-name">Orquídeas</h3>
+                <p class="flower-origin">Tropical Regions</p>
+                <p class="flower-description">Exotic orchid beauty</p>
+            </div>
+
+            <!-- Pansy -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/Ve8S1ae.jpg" alt="Pansy drawing">
+                </div>
+                <h3 class="flower-name">Pansy</h3>
+                <p class="flower-origin">Europe</p>
+                <p class="flower-description">Cheerful face flowers</p>
+            </div>
+
+            <!-- Poppy -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/Q4VELMt.jpg" alt="Poppy drawing">
+                </div>
+                <h3 class="flower-name">Poppy</h3>
+                <p class="flower-origin">Northern Hemisphere</p>
+                <p class="flower-description">Delicate paper petals</p>
+            </div>
+
+            <!-- Rosa -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/mEY4wNs.jpg" alt="Rosa drawing">
+                </div>
+                <h3 class="flower-name">Rosa</h3>
+                <p class="flower-origin">Asia</p>
+                <p class="flower-description">Queen of flowers</p>
+            </div>
+
+            <!-- Sunflower -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/23BfJb5.jpg" alt="Sunflower drawing">
+                </div>
+                <h3 class="flower-name">Sunflower</h3>
+                <p class="flower-origin">North America</p>
+                <p class="flower-description">Golden sun followers</p>
+            </div>
+
+            <!-- Tulipan -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/B2kHD9m.jpg" alt="Tulipan drawing">
+                </div>
+                <h3 class="flower-name">Tulipán</h3>
+                <p class="flower-origin">Central Asia</p>
+                <p class="flower-description">Spring's perfect cups</p>
+            </div>
+
+            <!-- Water Lily -->
+            <div class="flower-card">
+                <div class="flower-image">
+                    <img src="https://i.imgur.com/8HP8tvE.jpg" alt="Water Lily drawing">
+                </div>
+                <h3 class="flower-name">Water Lily</h3>
+                <p class="flower-origin">Worldwide</p>
+                <p class="flower-description">Floating water jewels</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <h2>About This Collection</h2>
+        <p>
+            Each flower in this collection represents a unique piece of nature's artistry, 
+            carefully captured through hand-drawn illustrations. From the delicate Bell Flowers 
+            to the majestic Water Lilies, this collection of 20 blooms tells stories from 
+            gardens around the world. <span class="heart">♥</span>
+        </p>
+    </section>
+
+    <!-- Modal -->
+    <div id="taxonomyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 id="modalFlowerName"></h2>
+                <p id="modalFlowerOrigin"></p>
+            </div>
+            <div class="modal-body">
+                <img id="modalFlowerImage" class="modal-image" alt="Flower drawing">
+                <div class="taxonomy-section">
+                    <h3>Scientific Classification</h3>
+                    <div id="taxonomyDetails"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Taxonomy data for each flower
+        const flowerTaxonomy = {
+            'Bell Flower': {
+                kingdom: 'Plantae',
+                family: 'Campanulaceae',
+                genus: 'Campanula',
+                species: 'C. medium',
+                commonNames: 'Canterbury Bells, Cup and Saucer'
+            },
+            'Borage': {
+                kingdom: 'Plantae',
+                family: 'Boraginaceae',
+                genus: 'Borago',
+                species: 'B. officinalis',
+                commonNames: 'Starflower, Bee Bush'
+            },
+            'Camellia': {
+                kingdom: 'Plantae',
+                family: 'Theaceae',
+                genus: 'Camellia',
+                species: 'C. japonica',
+                commonNames: 'Japanese Camellia, Tsubaki'
+            },
+            'Corazón Sangriento': {
+                kingdom: 'Plantae',
+                family: 'Papaveraceae',
+                genus: 'Lamprocapnos',
+                species: 'L. spectabilis',
+                commonNames: 'Bleeding Heart, Asian Bleeding Heart'
+            },
+            'Ginebra': {
+                kingdom: 'Plantae',
+                family: 'Asteraceae',
+                genus: 'Pericallis',
+                species: 'P. cruenta',
+                commonNames: 'Florist\'s Cineraria, Common Ragwort'
+            },
+            'Gladiolus': {
+                kingdom: 'Plantae',
+                family: 'Iridaceae',
+                genus: 'Gladiolus',
+                species: 'G. communis',
+                commonNames: 'Sword Lily, Gladiola'
+            },
+            'Hortensia': {
+                kingdom: 'Plantae',
+                family: 'Hydrangeaceae',
+                genus: 'Hydrangea',
+                species: 'H. macrophylla',
+                commonNames: 'French Hydrangea, Bigleaf Hydrangea'
+            },
+            'Jasmine': {
+                kingdom: 'Plantae',
+                family: 'Oleaceae',
+                genus: 'Jasminum',
+                species: 'J. officinale',
+                commonNames: 'Common Jasmine, Summer Jasmine'
+            },
+            'Laranjeira': {
+                kingdom: 'Plantae',
+                family: 'Rutaceae',
+                genus: 'Citrus',
+                species: 'C. × sinensis',
+                commonNames: 'Sweet Orange, Orange Tree'
+            },
+            'Lavender': {
+                kingdom: 'Plantae',
+                family: 'Lamiaceae',
+                genus: 'Lavandula',
+                species: 'L. angustifolia',
+                commonNames: 'English Lavender, True Lavender'
+            },
+            'Lotus': {
+                kingdom: 'Plantae',
+                family: 'Nelumbonaceae',
+                genus: 'Nelumbo',
+                species: 'N. nucifera',
+                commonNames: 'Sacred Lotus, Indian Lotus'
+            },
+            'Magnolia': {
+                kingdom: 'Plantae',
+                family: 'Magnoliaceae',
+                genus: 'Magnolia',
+                species: 'M. grandiflora',
+                commonNames: 'Southern Magnolia, Bull Bay'
+            },
+            'Margarita': {
+                kingdom: 'Plantae',
+                family: 'Asteraceae',
+                genus: 'Leucanthemum',
+                species: 'L. vulgare',
+                commonNames: 'Ox-eye Daisy, Common Daisy'
+            },
+            'Orquídeas': {
+                kingdom: 'Plantae',
+                family: 'Orchidaceae',
+                genus: 'Orchis',
+                species: 'Various species',
+                commonNames: 'Orchids, Butterfly Orchids'
+            },
+            'Pansy': {
+                kingdom: 'Plantae',
+                family: 'Violaceae',
+                genus: 'Viola',
+                species: 'V. × wittrockiana',
+                commonNames: 'Garden Pansy, Heartsease'
+            },
+            'Poppy': {
+                kingdom: 'Plantae',
+                family: 'Papaveraceae',
+                genus: 'Papaver',
+                species: 'P. rhoeas',
+                commonNames: 'Common Poppy, Corn Poppy'
+            },
+            'Rosa': {
+                kingdom: 'Plantae',
+                family: 'Rosaceae',
+                genus: 'Rosa',
+                species: 'Various species',
+                commonNames: 'Rose, Garden Rose'
+            },
+            'Sunflower': {
+                kingdom: 'Plantae',
+                family: 'Asteraceae',
+                genus: 'Helianthus',
+                species: 'H. annuus',
+                commonNames: 'Common Sunflower, Girasol'
+            },
+            'Tulipán': {
+                kingdom: 'Plantae',
+                family: 'Liliaceae',
+                genus: 'Tulipa',
+                species: 'T. gesneriana',
+                commonNames: 'Garden Tulip, Didier\'s Tulip'
+            },
+            'Water Lily': {
+                kingdom: 'Plantae',
+                family: 'Nymphaeaceae',
+                genus: 'Nymphaea',
+                species: 'Various species',
+                commonNames: 'Water Lily, Pond Lily'
+            }
+        };
+
+        // Create falling petals
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * window.innerWidth + 'px';
+            petal.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            petal.style.opacity = Math.random() * 0.5 + 0.2;
+            document.body.appendChild(petal);
+            
+            setTimeout(() => {
+                petal.remove();
+            }, 8000);
+        }
+
+        // Create petals periodically
+        setInterval(createPetal, 3000);
+
+        // Modal functionality
+        const modal = document.getElementById('taxonomyModal');
+        const span = document.getElementsByClassName('close')[0];
+
+        // Add click event to flower cards
+        document.querySelectorAll('.flower-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const flowerName = this.querySelector('.flower-name').textContent;
+                const flowerOrigin = this.querySelector('.flower-origin').textContent;
+                const flowerImage = this.querySelector('.flower-image img').src;
+                const taxonomy = flowerTaxonomy[flowerName];
+
+                // Update modal content
+                document.getElementById('modalFlowerName').textContent = flowerName;
+                document.getElementById('modalFlowerOrigin').textContent = flowerOrigin;
+                document.getElementById('modalFlowerImage').src = flowerImage;
+
+                // Create taxonomy details
+                const taxonomyHTML = `
+                    <div class="taxonomy-item">
+                        <span class="taxonomy-label">Kingdom:</span>
+                        <span class="taxonomy-value">${taxonomy.kingdom}</span>
+                    </div>
+                    <div class="taxonomy-item">
+                        <span class="taxonomy-label">Family:</span>
+                        <span class="taxonomy-value">${taxonomy.family}</span>
+                    </div>
+                    <div class="taxonomy-item">
+                        <span class="taxonomy-label">Genus:</span>
+                        <span class="taxonomy-value">${taxonomy.genus}</span>
+                    </div>
+                    <div class="taxonomy-item">
+                        <span class="taxonomy-label">Species:</span>
+                        <span class="taxonomy-value">${taxonomy.species}</span>
+                    </div>
+                    <div class="taxonomy-item">
+                        <span class="taxonomy-label">Common Names:</span>
+                        <span class="taxonomy-value">${taxonomy.commonNames}</span>
+                    </div>
+                `;
+
+                document.getElementById('taxonomyDetails').innerHTML = taxonomyHTML;
+
+                // Show modal
+                modal.style.display = 'block';
+            });
+        });
+
+        // Close modal when clicking X
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Smooth scroll behavior
+        document.querySelector('.scroll-indicator').addEventListener('click', () => {
+            document.querySelector('.gallery').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Add parallax effect to hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+</body>
+</html>
